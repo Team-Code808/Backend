@@ -20,6 +20,5 @@ public interface MyPageService {
     // 기프티콘 목록 조회
     List<CouponResponse> getCoupons(Long memberId);
 
-    // 스트레스 요약 조회
-    StressResponse getStressSummary(Long memberId);
+
 }

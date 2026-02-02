@@ -33,22 +33,6 @@ public class Account {
     @JoinColumn(name = "MEMBER_ID", unique = true, nullable = false)
     private Member member;
 
-    @Column(name = "REMAINING_POINT", nullable = false)
-    @Builder.Default
-    @Setter
-    private Long remainingPoint = 0L;
-
-    @Column(name = "TOTAL_EARNED", nullable = false)
-    @Builder.Default
-    @Setter
-    private Long totalEarned = 0L;
-
-    @Column(name = "TOTAL_SPENT", nullable = false)
-    @Builder.Default
-    @Setter
-    private Long totalSpent = 0L;
-
-
 // [수정/추가] 포인트 적립 비즈니스 로직
 public void deposit(int amount) {
     if (amount < 0) {

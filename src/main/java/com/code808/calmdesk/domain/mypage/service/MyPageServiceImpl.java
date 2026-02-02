@@ -1,7 +1,5 @@
 package com.code808.calmdesk.domain.mypage.service;
 
-import com.code808.calmdesk.domain.attendance.entity.StressSummary;
-import com.code808.calmdesk.domain.attendance.repository.StressSummaryRepository;
 import com.code808.calmdesk.domain.gifticon.entity.Order;
 import com.code808.calmdesk.domain.gifticon.entity.PointHistory;
 import com.code808.calmdesk.domain.gifticon.repository.OrderRepository;
@@ -28,7 +26,6 @@ public class MyPageServiceImpl implements MyPageService {
     private final AccountRepository accountRepository;
     private final PointHistoryRepository pointHistoryRepository;
     private final OrderRepository orderRepository;
-    private final StressSummaryRepository stressSummaryRepository;
     private final PasswordEncoder passwordEncoder;
 
     /**
@@ -36,7 +33,7 @@ public class MyPageServiceImpl implements MyPageService {
      */
     private int getCurrentPoint(Long memberId) {
         return accountRepository.findByMemberMemberId(memberId)
-                .map(a -> a.getRemainingPoint() != null ? a.getRemainingPoint().intValue() : 0)
+                .map(a -> a.getAccountLeave() != null ? a.getAccountLeave().intValue() : 0)
                 .orElseGet(() -> getCurrentPointFromHistory(memberId));
     }
 
@@ -114,14 +111,4 @@ public class MyPageServiceImpl implements MyPageService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public StressResponse getStressSummary(Long memberId) {
-        memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
-
-        // 최근 스트레스 요약 조회
-        Optional<StressSummary> summaryOpt = stressSummaryRepository.findLatestByMemberId(memberId);
-        return summaryOpt.map(StressResponse::from)
-                .orElseGet(StressResponse::createDefault);
-    }
 }

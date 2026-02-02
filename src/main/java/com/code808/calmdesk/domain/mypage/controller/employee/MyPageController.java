@@ -82,16 +82,4 @@ public class MyPageController {
         }
     }
 
-    // 스트레스 요약 조회
-    @GetMapping("/stress")
-    public ResponseEntity<ApiResponse<StressResponse>> getStressSummary(@RequestParam Long memberId) {
-        try {
-            StressResponse response = myPageService.getStressSummary(memberId);
-            return ResponseEntity.ok(ApiResponse.success("스트레스 요약 조회 성공", response));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body(ApiResponse.error(e.getMessage()));
-        }
-    }
-
 }
