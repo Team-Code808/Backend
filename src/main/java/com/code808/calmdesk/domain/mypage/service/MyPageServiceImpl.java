@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+// import com.code808.calmdesk.domain.attendance.entity.StressSummary;
+// import com.code808.calmdesk.domain.attendance.repository.StressSummaryRepository;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -26,6 +28,7 @@ public class MyPageServiceImpl implements MyPageService {
     private final AccountRepository accountRepository;
     private final PointHistoryRepository pointHistoryRepository;
     private final OrderRepository orderRepository;
+    // private final StressSummaryRepository stressSummaryRepository;
     private final PasswordEncoder passwordEncoder;
 
     /**
@@ -33,13 +36,15 @@ public class MyPageServiceImpl implements MyPageService {
      */
     private int getCurrentPoint(Long memberId) {
         return accountRepository.findByMemberMemberId(memberId)
-                .map(a -> a.getAccountLeave() != null ? a.getAccountLeave().intValue() : 0)
+                .map(a -> a.getRemainingPoint() != null ? a.getRemainingPoint().intValue() : 0)
                 .orElseGet(() -> getCurrentPointFromHistory(memberId));
     }
 
     private int getCurrentPointFromHistory(Long memberId) {
         List<PointHistory> histories = pointHistoryRepository.findByMemberIdOrderByCreateDateDescIdDesc(memberId);
-        if (histories.isEmpty()) return 0;
+        if (histories.isEmpty()) {
+            return 0;
+        }
         Long balance = histories.get(0).getBalanceAfter();
         return balance != null ? balance.intValue() : 0;
     }
@@ -111,4 +116,15 @@ public class MyPageServiceImpl implements MyPageService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public StressResponse getStressSummary(Long memberId) {
+        memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+
+        // 최근 스트레스 요약 조회 (임시 주석 처리)
+        // Optional<StressSummary> summaryOpt = stressSummaryRepository.findLatestByMemberId(memberId);
+        // return summaryOpt.map(StressResponse::from)
+        //         .orElseGet(StressResponse::createDefault);
+        return StressResponse.createDefault();
+    }
 }
