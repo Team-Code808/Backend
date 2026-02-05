@@ -1,5 +1,6 @@
 package com.code808.calmdesk.domain.gifticon.service;
 
+import com.code808.calmdesk.domain.Notification.service.NotificationService;
 import com.code808.calmdesk.domain.common.enums.CommonEnums;
 import com.code808.calmdesk.domain.gifticon.dto.*;
 import com.code808.calmdesk.domain.gifticon.entity.*;
@@ -20,6 +21,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ShopEmployeeService {
+
+    // 1. 알림 서비스 추가
+    private final NotificationService notificationService;
 
     private final GifticonRepository gifticonRepository;
     private final AccountRepository accountRepository;
@@ -77,6 +81,13 @@ public class ShopEmployeeService {
                 null                           // missionId (구매이므로 미션ID는 null)
         );
         pointHistoryRepository.save(history);
+
+        notificationService.createNotification(
+                String.valueOf(request.getUserId()), // memberId (String)
+                "success",                           // type (아이콘 결정)
+                "기프티콘 구매 완료",                   // title
+                gifticon.getGifticonName() + " 상품 구매가 완료되었습니다!" // message
+        );
         return order.getOrderId();
 
     }
@@ -163,6 +174,14 @@ public class ShopEmployeeService {
         memberMission.complete(); // status = Y 처리
 
         memberMissionRepository.save(memberMission);
+
+        // ✅ 알림 추가: 미션 보상 획득
+        notificationService.createNotification(
+                String.valueOf(memberId),
+                "info",
+                "미션 보상 지급",
+                "[" + memberMission.getMissionList().getRewardName() + "] 미션 완료! 포인트가 지급되었습니다. 💰"
+        );
     }
 
     // 3. 진행률 업데이트 (isAccumulative 파라미터 활용 최적화)

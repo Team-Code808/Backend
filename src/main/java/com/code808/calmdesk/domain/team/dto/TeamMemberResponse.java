@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 
 @Getter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class TeamMemberResponse {
 

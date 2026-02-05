@@ -1,6 +1,6 @@
 spring:
   application:
-    name: calmDesk
+    name: CalmDesk
 
   config:
     import: optional:classpath:application-secret.yaml
