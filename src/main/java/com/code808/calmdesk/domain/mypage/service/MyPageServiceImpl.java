@@ -36,7 +36,7 @@ public class MyPageServiceImpl implements MyPageService {
      */
     private int getCurrentPoint(Long memberId) {
         return accountRepository.findByMemberMemberId(memberId)
-                .map(a -> a.getRemainingPoint() != null ? a.getRemainingPoint().intValue() : 0)
+                .map(a -> a.getAccountLeave() != null ? a.getAccountLeave().intValue() : 0)
                 .orElseGet(() -> getCurrentPointFromHistory(memberId));
     }
 
@@ -116,7 +116,7 @@ public class MyPageServiceImpl implements MyPageService {
                 .collect(Collectors.toList());
     }
 
-    @Override
+
     public StressResponse getStressSummary(Long memberId) {
         memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
