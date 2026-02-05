@@ -82,12 +82,18 @@ public class ShopEmployeeService {
         );
         pointHistoryRepository.save(history);
 
-        notificationService.createNotification(
-                String.valueOf(request.getUserId()), // memberId (String)
-                "success",                           // type (아이콘 결정)
-                "기프티콘 구매 완료",                   // title
-                gifticon.getGifticonName() + " 상품 구매가 완료되었습니다!" // message
+        notificationService.saveAndSend(
+                String.valueOf(request.getUserId()),
+                "USER", // 프론트 필터링을 위해 USER로 지정
+                "기프티콘 구매 완료",
+                gifticon.getGifticonName() + " 상품 구매가 완료되었습니다!"
         );
+
+
+        notificationService.sendAdminNoti(
+                member.getName() + "님이 [" + gifticon.getGifticonName() + "] 상품을 구매했습니다. 재고를 확인하세요."
+        );
+
         return order.getOrderId();
 
     }
@@ -176,12 +182,13 @@ public class ShopEmployeeService {
         memberMissionRepository.save(memberMission);
 
         // ✅ 알림 추가: 미션 보상 획득
-        notificationService.createNotification(
+        notificationService.saveAndSend(
                 String.valueOf(memberId),
-                "info",
+                "USER",
                 "미션 보상 지급",
                 "[" + memberMission.getMissionList().getRewardName() + "] 미션 완료! 포인트가 지급되었습니다. 💰"
         );
+
     }
 
     // 3. 진행률 업데이트 (isAccumulative 파라미터 활용 최적화)

@@ -2,6 +2,7 @@
 package com.code808.calmdesk.domain.Notification;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -34,17 +35,17 @@ public class SseEmitters {
     }
 
     // 알림 전송
-    public void sendToClient(String userId, Object data) {
-        SseEmitter emitter = emitters.get(userId);
+    public void sendToClient(String memberId, Object data) {
+        SseEmitter emitter = emitters.get(memberId);
         if (emitter != null) {
             try {
                 // "notification"이라는 이름의 이벤트로 데이터를 보냄
                 emitter.send(SseEmitter.event()
                         .name("notification")
-                        .data(data));
+                        .data(data, MediaType.APPLICATION_JSON));
             } catch (IOException e) {
-                log.error("error sending notification to user: {}", userId);
-                emitters.remove(userId);
+                log.error("error sending notification to user: {}", memberId);
+                emitters.remove(memberId);
             }
         }
     }
