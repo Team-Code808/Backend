@@ -130,6 +130,13 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    public List<TeamService.DepartmentItem> getDepartmentsByCompanyId(Long companyId) {
+        return departmentRepository.findByCompany_CompanyId(companyId).stream()
+                .map(d -> new TeamService.DepartmentItem(d.getDepartmentId(), d.getDepartmentName()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
     public void createDepartment(Long companyId, String departmentName) {
         if (departmentName == null || departmentName.isBlank()) {

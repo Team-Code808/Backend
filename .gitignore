@@ -240,6 +240,20 @@ gradle-app.setting
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
+# 음성 녹음 파일 저장 폴더
+recordings/
+*.webm
+*.ogg
+*.wav
+*.mp3
+*.flac
+
+# Google Cloud 서비스 계정 키 파일
+*-*.json
+*service-account*.json
+*credentials*.json
+*key*.json
+
 ### Gradle Patch ###
 # Java heap dump
 *.hprof
